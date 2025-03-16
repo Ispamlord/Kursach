@@ -9,6 +9,8 @@ namespace Kursach
         private OpenFileDialog openFileDialog1;
         private SaveFileDialog saveFileDialog1;
         private Stack<string> history = new Stack<string>();
+        private PictureBox lineNumbers;
+        private Panel panel;
         public Form1()
         {
             InitializeComponent();
@@ -18,8 +20,16 @@ namespace Kursach
             saveFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
             richTextBox1.TextChanged += OnTextChanged;
             FormClosing += Save__Click;
+            richTextBox1.VScroll += richTextBox1_VScroll;
+            dataGridView1.Columns.Add("Code", "Код ошибки");
+            dataGridView1.Columns.Add("ID", "идентификатор");
+            dataGridView1.Columns.Add("Znak", "Ввод");
+            dataGridView1.Columns.Add("Place", "Место ошибки");
         }
-
+        private void richTextBox1_VScroll(object sender, EventArgs e)
+        {
+            UpdateLineNumbers();
+        }
         private void Another_Click(object sender, EventArgs e)
         {
 
@@ -56,9 +66,10 @@ namespace Kursach
                 history.Push(richTextBox1.Text);
             }
         }
-
+        
         private void OnTextChanged(object sender, EventArgs e)
         {
+            UpdateLineNumbers();
             StoreCurrentState();
             int selectionStart = richTextBox1.SelectionStart;
             int selectionLength = richTextBox1.SelectionLength;
@@ -86,8 +97,8 @@ namespace Kursach
             if (history.Count > 1)
             {
                 history.Pop();
-                richTextBox1.Text = history.Peek(); 
-                richTextBox1.SelectionStart = richTextBox1.Text.Length; 
+                richTextBox1.Text = history.Peek();
+                richTextBox1.SelectionStart = richTextBox1.Text.Length;
             }
         }
         private void Back__Click(object sender, EventArgs e)
@@ -102,10 +113,15 @@ namespace Kursach
 
         private void Run__Click(object sender, EventArgs e)
         {
-            Scan1 scan = new Scan1(richTextBox1.Text);
+            dataGridView1.Rows.Clear();
+            Scan scan = new Scan(richTextBox1.Text);
+            scan.Lexic();
+            for (int i = 0; i < scan.codes.Count; i++) {
+                dataGridView1.Rows.Add(scan.codes[i], scan.keywords[i], scan.keyword[i]);
+            }
         }
 
-         
+
         private Dictionary<string, Color> keywords = new Dictionary<string, Color>
         {
             { "struct", Color.Green },
@@ -121,15 +137,37 @@ namespace Kursach
             { ";", Color.DarkGray }
         };
 
+        private void UpdateLineNumbers()
+        {
+            Point pt = new Point(0, 0);
+            int firstIndex = richTextBox1.GetCharIndexFromPosition(pt);
+            int firstLine = richTextBox1.GetLineFromCharIndex(firstIndex);
 
+            int totalLines = richTextBox1.Lines.Length;
+
+            Bitmap bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.Clear(Color.White);
+                for (int i = 0; i < totalLines; i++)
+                {
+                    int y = (i - firstLine) * richTextBox1.Font.Height;
+                    if (y >= 0 && y < pictureBox1.Height)
+                    {
+                        g.DrawString((i + 1).ToString(), richTextBox1.Font, Brushes.Black, new PointF(0, y));
+                    }
+                }
+            }
+            pictureBox1.Image = bmp;
+        }
 
         public void HighlightSyntax(object sender, EventArgs e)
         {
-            int selectionStart = richTextBox1.SelectionStart; 
+            int selectionStart = richTextBox1.SelectionStart;
             int selectionLength = richTextBox1.SelectionLength;
 
             richTextBox1.SelectAll();
-            richTextBox1.SelectionColor = Color.Black; 
+            richTextBox1.SelectionColor = Color.Black;
 
             foreach (var word in keywords)
             {
@@ -182,6 +220,30 @@ namespace Kursach
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void UpSize_Click(object sender, EventArgs e)
+        {
+            ChangeFontSize(2);
+        }
+        private void ChangeFontSize(float delta)
+        {
+            if (richTextBox1.Font != null)
+            {
+                float newSize = Math.Max(6, richTextBox1.Font.Size + delta);
+                richTextBox1.Font = new Font(richTextBox1.Font.FontFamily, newSize);
+            }
+
+            if (dataGridView1.Font != null)
+            {
+                float newSize = Math.Max(6, dataGridView1.Font.Size + delta);
+                dataGridView1.Font = new Font(dataGridView1.Font.FontFamily, newSize);
+            }
+        }
+
+        private void DownSize_Click(object sender, EventArgs e)
+        {
+            ChangeFontSize(-2);
         }
     }
 }

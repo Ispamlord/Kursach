@@ -13,101 +13,90 @@ namespace Kursach.Compilier
         public string text;
         public string[] words;
         public string error = "";
+        public Dictionary<string, int> keyValuePairs = new Dictionary<string, int>()
+        {
+            { "struct", 1 },
+            { "int", 2},
+            { "string", 3},
+            { "double", 4},
+            { "float", 5},
+            { "public", 6},
+            { "private", 7},
+            { "protected", 8},
+            { " ", 9},
+            { "{", 10},
+            { "}", 11},
+            { ";", 12}
+        };
         public Scan1(string text) {
             this.text = text; 
         }
+        public List <string> keywords = new List<string>();
+        public List<string> keyword = new List<string>();
+        public List<int> codes = new List<int>();
         public string start()
         {
-            
-            while (true) {
-                text = Regex.Replace(text, "{", " { ");
-                text = Regex.Replace(text, "}", " } ");
-                text = Regex.Replace(text, ";", " ; ");
-                string result = Regex.Replace(text, @"\s+", " ").Trim();
-                string[] sstruct = result.Split(new char[] { ' ' });
-                int[] code = new int[result.Length];
-                for (int i = 0; i < sstruct.Length; i++) {
-
-                    switch (sstruct[i]) {
-                        case "struct":
-                            code[i] = 1;
-                            break;
-                        case "int":
-                            code[i] = 2;
-                            break;
-                        case "string":
-                            code[i] = 3;
-                            break;
-                        case "double":
-                            code[i] = 4;
-                            break;
-                        case "float":
-                            code[i] = 5;
-                            break;
-                        case "public":
-                            code[i] = 6;
-                            break;
-                        case "private":
-                            code[i] = 7;
-                            break;
-                        case "protected":
-                            code[i] = 8;
-                            break;
-                        case " ":
-                            code[i] = 10;
-                            break;
-                        case "{":
-                            code[i] = 11;
-                            break;
-                        case "}":
-                            code[i] = 12;
-                            break;
-                        case ";":
-                            code[i] = 13;
-                            break;
-                        default:
-                            code[i] = 0;
-                            break;
-                            
-                    }
-                    if ((code[i-1] == 10 && (code[i-2]>=1 && code[i-2] <= 5)))
-                    {
-                        code[i] = 9;
-                    }
-                    if (code[i] == 0)
-                    {
-                        error += "error";   
-                    }
+            text = Regex.Replace(text, "{", " { ");
+            text = Regex.Replace(text, "}", " } ");
+            text = Regex.Replace(text, ";", " ; ");
+            text.Trim();
+            var result = Regex.Matches(text, @"\w+|[{};=,()]|\s+");
+            int prevcode = 0;
+            foreach (Match match in result) {
+                int code =0;
+                if (match.Value.Trim().Length == 0)
+                {
+                    codes.Add(9);
+                    keywords.Add("Обязательный пробел");
+                    code = 0;
                 }
-                return error;
+                else if (keyValuePairs.ContainsKey(match.Value))
+                {
+                    code = keyValuePairs[match.Value];
+                    codes.Add(code);
+                    if (code>0&&code<9)
+                    {
 
-                return result;
-            }
+                    }else if (code == 10)
+                    {
+                        keywords.Add("Ключевое слово");
+                    }
+                    keyword.Add(match.Value);
+                }
+                else if (letter(match.Value)) {
+                    code = 13;
+                    codes.Add(code);
+                    keywords.Add("Id");
+                    keyword.Add(match.Value);
+                }
+                else
+                {
+                   return "error";
+                }
+
+                    //if(prevcode >= 1 && prevcode<9)
+                    //{
+
+                    //}
+                }
+
+                return "error";
+
+            
         }
        
 
-        //public int code(string word)
-        //{
-        //    switch (word)
-        //    {
-        //        case "struct": 
-
-        //            break;
-        //    }
-
-        //    return 0;
-        //}
-        private string letter(string word)
+        
+        private bool letter(string word)
         {
             if (char.IsDigit(word[0]))
-                return string.Empty;
+                return false;
 
             if (word.All(c => char.IsLetterOrDigit(c) || c == '_'))
             {
-                return word;
+                return true;
             }
-            return string.Empty;
+            return false;
         }
-
     }
 }

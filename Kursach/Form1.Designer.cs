@@ -48,6 +48,9 @@
             текстToolStripMenuItem = new ToolStripMenuItem();
             Run = new ToolStripMenuItem();
             справкаToolStripMenuItem = new ToolStripMenuItem();
+            разноеToolStripMenuItem = new ToolStripMenuItem();
+            UpSize = new ToolStripMenuItem();
+            DownSize = new ToolStripMenuItem();
             Open_ = new PictureBox();
             Save_ = new PictureBox();
             Back_ = new PictureBox();
@@ -58,6 +61,7 @@
             Paste_ = new PictureBox();
             richTextBox1 = new RichTextBox();
             dataGridView1 = new DataGridView();
+            pictureBox1 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)Create_).BeginInit();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Open_).BeginInit();
@@ -69,6 +73,7 @@
             ((System.ComponentModel.ISupportInitialize)Copy_).BeginInit();
             ((System.ComponentModel.ISupportInitialize)Paste_).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // Create_
@@ -85,7 +90,7 @@
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { файлToolStripMenuItem, правкаToolStripMenuItem, текстToolStripMenuItem, Run, справкаToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { файлToolStripMenuItem, правкаToolStripMenuItem, текстToolStripMenuItem, Run, справкаToolStripMenuItem, разноеToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(799, 28);
@@ -203,6 +208,27 @@
             справкаToolStripMenuItem.Size = new Size(81, 24);
             справкаToolStripMenuItem.Text = "Справка";
             // 
+            // разноеToolStripMenuItem
+            // 
+            разноеToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { UpSize, DownSize });
+            разноеToolStripMenuItem.Name = "разноеToolStripMenuItem";
+            разноеToolStripMenuItem.Size = new Size(72, 24);
+            разноеToolStripMenuItem.Text = "Разное";
+            // 
+            // UpSize
+            // 
+            UpSize.Name = "UpSize";
+            UpSize.Size = new Size(274, 26);
+            UpSize.Text = "Увеличить размер текста";
+            UpSize.Click += UpSize_Click;
+            // 
+            // DownSize
+            // 
+            DownSize.Name = "DownSize";
+            DownSize.Size = new Size(274, 26);
+            DownSize.Text = "Уменьшить размер текста";
+            DownSize.Click += DownSize_Click;
+            // 
             // Open_
             // 
             Open_.Image = (Image)resources.GetObject("Open_.Image");
@@ -293,9 +319,9 @@
             // 
             // richTextBox1
             // 
-            richTextBox1.Location = new Point(30, 127);
+            richTextBox1.Location = new Point(67, 127);
             richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(757, 147);
+            richTextBox1.Size = new Size(720, 147);
             richTextBox1.TabIndex = 24;
             richTextBox1.Text = "";
             richTextBox1.TextChanged += HighlightSyntax;
@@ -309,11 +335,20 @@
             dataGridView1.Size = new Size(757, 188);
             dataGridView1.TabIndex = 25;
             // 
+            // pictureBox1
+            // 
+            pictureBox1.Location = new Point(30, 127);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(40, 147);
+            pictureBox1.TabIndex = 26;
+            pictureBox1.TabStop = false;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(799, 497);
+            Controls.Add(pictureBox1);
             Controls.Add(dataGridView1);
             Controls.Add(richTextBox1);
             Controls.Add(Paste_);
@@ -328,7 +363,7 @@
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
             Name = "Form1";
-            Text = "Form1";
+            Text = "Компилятор";
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)Create_).EndInit();
             menuStrip1.ResumeLayout(false);
@@ -342,6 +377,7 @@
             ((System.ComponentModel.ISupportInitialize)Copy_).EndInit();
             ((System.ComponentModel.ISupportInitialize)Paste_).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -376,5 +412,9 @@
         private ToolStripMenuItem Select_all;
         private RichTextBox richTextBox1;
         private DataGridView dataGridView1;
+        private ToolStripMenuItem разноеToolStripMenuItem;
+        private ToolStripMenuItem UpSize;
+        private ToolStripMenuItem DownSize;
+        private PictureBox pictureBox1;
     }
 }
