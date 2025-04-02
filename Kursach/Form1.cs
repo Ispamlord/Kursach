@@ -21,10 +21,11 @@ namespace Kursach
             richTextBox1.TextChanged += OnTextChanged;
             FormClosing += Save__Click;
             richTextBox1.VScroll += richTextBox1_VScroll;
-            dataGridView1.Columns.Add("Code", "Код ошибки");
-            dataGridView1.Columns.Add("ID", "идентификатор");
-            dataGridView1.Columns.Add("Znak", "Ввод");
-            dataGridView1.Columns.Add("Place", "Место ошибки");
+            dataGridView1.ColumnCount = 4;
+            dataGridView1.Columns[0].Name = "Строка";
+            dataGridView1.Columns[1].Name = "Позиция";
+            dataGridView1.Columns[2].Name = "Лексема";
+            dataGridView1.Columns[3].Name = "Тип";
         }
         private void richTextBox1_VScroll(object sender, EventArgs e)
         {
@@ -35,10 +36,33 @@ namespace Kursach
 
         }
 
+        private void SaveCurrentFile()
+        {
+            if (richTextBox1.TextLength > 0)
+            {
+                DialogResult result = MessageBox.Show("Сохранить текущий файл?", "Сохранение", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Cancel)
+                    return;
+
+                if (result == DialogResult.Yes)
+                {
+                    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        System.IO.File.WriteAllText(saveFileDialog1.FileName, richTextBox1.Text);
+                        MessageBox.Show("Файл сохранен");
+                    }
+                }
+            }
+        }
+
         private void Open__Click(object sender, EventArgs e)
         {
+            SaveCurrentFile();
+
             if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
                 return;
+
             string filename = openFileDialog1.FileName;
             string fileText = System.IO.File.ReadAllText(filename);
             richTextBox1.Text = fileText;
@@ -47,7 +71,10 @@ namespace Kursach
 
         private void Create__Click(object sender, EventArgs e)
         {
+            SaveCurrentFile();
 
+            richTextBox1.Clear();
+            MessageBox.Show("Новый файл создан");
         }
 
         private void Save__Click(object sender, EventArgs e)
@@ -120,7 +147,7 @@ namespace Kursach
                 dataGridView1.Rows.Add(scan.codes[i], scan.keywords[i], scan.keyword[i]);
             }
         }
-
+        
 
         private Dictionary<string, Color> keywords = new Dictionary<string, Color>
         {

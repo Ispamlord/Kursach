@@ -34,6 +34,7 @@ namespace Kursach.Compilier
         public List <string> keywords = new List<string>();
         public List<string> keyword = new List<string>();
         public List<int> codes = new List<int>();
+        public List <string> idetnificator = new List<string>();
         public string start()
         {
             text = Regex.Replace(text, "{", " { ");
@@ -65,9 +66,19 @@ namespace Kursach.Compilier
                 }
                 else if (letter(match.Value)) {
                     code = 13;
+                    if (idetnificator.Count > 0) {
+                        for (int i = 0; i < idetnificator.Count; i++)
+                        {
+                            string v = match.Value;
+                            if(idetnificator[i] == v){ 
+                                
+                            }
+                        }
+                    }
                     codes.Add(code);
                     keywords.Add("Id");
                     keyword.Add(match.Value);
+                    idetnificator.Add(match.Value);
                 }
                 else
                 {
