@@ -135,4 +135,7 @@ struct name {
   int name3;
 };
 ![image](https://github.com/user-attachments/assets/5a3378d4-3ab4-4a13-ac00-25d333eb8cad)
+# 5 Лабораторная работа
+
+# 6 Лабораторная работа
 
