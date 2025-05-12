@@ -152,4 +152,11 @@ struct name {
 3. ```([A-Za-z0-9+/]{4})+([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?```
 
 
-## Тестовые примеры
+# Тестовые примеры
+## Блок I. 22. Построить РВ, описывающее серию и номер российского паспорта.
+![image](https://github.com/user-attachments/assets/f62e8c61-405e-46fe-ada2-3673b86eec0b)
+## Блок II. 23. Построить РВ для поиска аббревиатур.
+![image](https://github.com/user-attachments/assets/3d5b6240-519f-42bd-a18f-4269d2bf4bcd)
+## Блок III. 9. Построить РВ, описывающее URL-ссылку на веб-страницу на латинице (с различными протоколами HTTP, HTTPS, FTP).
+![image](https://github.com/user-attachments/assets/e4942e20-33c0-47de-ba50-9e3fff6008c6)
+
