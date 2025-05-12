@@ -1,5 +1,10 @@
 ﻿using Kursach.Compilier;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using static System.Net.WebRequestMethods;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Kursach
@@ -22,10 +27,16 @@ namespace Kursach
             FormClosing += Save__Click;
             richTextBox1.VScroll += richTextBox1_VScroll;
             dataGridView1.ColumnCount = 4;
-            dataGridView1.Columns[0].Name = "Строка";
-            dataGridView1.Columns[1].Name = "Позиция";
-            dataGridView1.Columns[2].Name = "Лексема";
-            dataGridView1.Columns[3].Name = "Тип";
+            dataGridView1.Columns[0].Name = "op";
+            dataGridView1.Columns[1].Name = "arg1";
+            dataGridView1.Columns[2].Name = "arg2";
+            dataGridView1.Columns[3].Name = "result";
+            dataGridView1.EnableHeadersVisualStyles = false;
+            dataGridView1.RowHeadersVisible = false;
+            dataGridView1.AllowUserToAddRows = false; // отключает строку "для добавления новой записи"
+            dataGridView1.BackgroundColor = Color.White; // фон за пределами таблицы
+            dataGridView1.DefaultCellStyle.BackColor = Color.White; // фон обычных ячеек
+
         }
         private void richTextBox1_VScroll(object sender, EventArgs e)
         {
@@ -93,7 +104,7 @@ namespace Kursach
                 history.Push(richTextBox1.Text);
             }
         }
-        
+
         private void OnTextChanged(object sender, EventArgs e)
         {
             UpdateLineNumbers();
@@ -135,7 +146,10 @@ namespace Kursach
 
         private void Another__Click(object sender, EventArgs e)
         {
-
+            if (richTextBox1.CanRedo)
+            {
+                richTextBox1.Redo();
+            }
         }
 
         private void Run__Click(object sender, EventArgs e)
@@ -143,11 +157,54 @@ namespace Kursach
             dataGridView1.Rows.Clear();
             Scan scan = new Scan(richTextBox1.Text);
             scan.Lexic();
-            for (int i = 0; i < scan.codes.Count; i++) {
-                dataGridView1.Rows.Add(scan.codes[i], scan.keywords[i], scan.keyword[i]);
+            scan.Tokenize();
+            for (int i = 0; i < scan.errors.Count; i++)
+            {
+                dataGridView1.Rows.Add(scan.line[i], scan.position[i], $"Отброшен символ {scan.errors[i]}");
             }
+
+            Parse parse = new Parse(scan.tokens);
+            parse.myTokens = scan.myTokens;
+            TokenReturn token = new TokenReturn();
+
+            int k = parse.Parser(ERRORTYPE.START, 0, ref token);
+
+            for (int i = 0; i < k; i++)
+            {
+                dataGridView1.Rows.Add(token.error[i].Line, token.error[i].Position, token.error[i].mess);
+            }
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.WriteLine("Введите выражение:");
+            string input = Console.ReadLine();
+            //dataGridView1.Rows.Clear();
+
+            //try
+            //{
+            //    Lexer lexer = new Lexer(richTextBox1.Text);
+            //    Parser parser = new Parser(lexer);
+            //    parser.Parse();
+
+            //    foreach (var tetrad in parser.Tetrads)
+            //    {
+            //        if (tetrad.IsError)
+            //        {
+            //            dataGridView1.Rows.Add("Ошибка", tetrad.Arg1, "", "");
+            //        }
+            //        else
+            //        {
+            //            dataGridView1.Rows.Add(tetrad.Op, tetrad.Arg1, tetrad.Arg2, tetrad.Result);
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    dataGridView1.Rows.Add("Ошибка", ex.Message, "", "");
+            //}
+
+
+
         }
-        
+        private BindingList<ErrorMessage> Errors = new BindingList<ErrorMessage>();
 
         private Dictionary<string, Color> keywords = new Dictionary<string, Color>
         {
@@ -156,9 +213,6 @@ namespace Kursach
             { "string", Color.Red },
             { "double", Color.Red },
             { "float", Color.Red },
-            { "public", Color.Purple },
-            { "private", Color.Purple },
-            { "protected", Color.Purple },
             { "{", Color.DarkGray },
             { "}", Color.DarkGray },
             { ";", Color.DarkGray }
@@ -271,6 +325,130 @@ namespace Kursach
         private void DownSize_Click(object sender, EventArgs e)
         {
             ChangeFontSize(-2);
+        }
+
+        private void Remove_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionLength > 0)
+            {
+                richTextBox1.SelectedText = "";
+            }
+        }
+
+        private void Select_all_Click(object sender, EventArgs e)
+        {
+            richTextBox1.SelectAll();
+            richTextBox1.Focus();
+        }
+
+        private void вызовСправкиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var aboutForm = new AboutProgramm();
+            aboutForm.ShowDialog(); // Показывает как всплывающее окно
+        }
+
+        private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var helpForm = new HelpForm();
+            helpForm.ShowDialog(); // Открывает как модальное всплывающее окно
+
+
+
+        }
+
+        private void постановкаЗадачиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = "Литература.pdf";
+            helper.OpenPdf(path);
+        }
+
+        private void списокЛитературыToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = "Тесты.pdf";
+            helper.OpenPdf(path);
+        }
+        PdfHelper helper = new PdfHelper();
+        private void тестовыеПримерыToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = "Постановка_задачи.pdf";
+            helper.OpenPdf(path);
+        }
+
+        private void грамматикаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = "Грамматика.pdf";
+            helper.OpenPdf(path);
+        }
+
+        private void классификацияГрамматикаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = "Классификация_грамматики.pdf";
+            helper.OpenPdf(path);
+        }
+
+        private void методАнализаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = "Метод_анализа.pdf";
+            helper.OpenPdf(path);
+
+        }
+
+        private void диагностикаИНейтрализацияОшибокToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = "DD.pdf";
+            helper.OpenPdf(path);
+        }
+
+        private void исходныйКодПрограммыToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = "Код.pdf";
+            helper.OpenPdf(path);
+        }
+
+        private void puskPasportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.Clear();
+            string pattern = @"\b\d{4}\s\d{6}\b";
+            Regex regex = new Regex(pattern);
+
+            MatchCollection matches = regex.Matches(richTextBox1.Text);
+
+            foreach (Match match in matches)
+            {
+                dataGridView1.Rows.Add(match.Index, "Найдено:", match.Value);
+                Console.WriteLine($"Найдено: {match.Value}, Позиция начала: {match.Index}");
+            }
+        }
+
+        private void puskToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.Clear();
+            string pattern = @"\b[А-Я]{2,}\b";
+            Regex regex = new Regex(pattern);
+
+            MatchCollection matches = regex.Matches(richTextBox1.Text);
+
+            foreach (Match match in matches)
+            {
+                dataGridView1.Rows.Add(match.Index, "Найдено:", match.Value);
+                Console.WriteLine($"Найдено: {match.Value}, Позиция начала: {match.Index}");
+            }
+        }
+
+        private void puskHTTPToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+                dataGridView1.Rows.Clear();
+            string pattern = @"\b(?:http|https|ftp)://[a-zA-Z0-9\-._~:/?#@!$&'()*+,;=%]+\b";
+            Regex regex = new Regex(pattern);
+
+            MatchCollection matches = regex.Matches(richTextBox1.Text);
+
+            foreach (Match match in matches)
+            {
+                dataGridView1.Rows.Add(match.Index, "Найдено:", match.Value);
+                Console.WriteLine($"Найдено: {match.Value}, Позиция начала: {match.Index}");
+            }
         }
     }
 }

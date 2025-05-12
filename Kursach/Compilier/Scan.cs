@@ -1,303 +1,244 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Kursach.Compilier
 {
-    enum Token { START, ModStruct, StructKeyword, StructName, OpenBrace, Mod, Type, IDentificator, Semicolon, CloseBrace, END, error }
+  
+    public enum Token { START, STRUCT, OPENBRACE, TYPE, ID, SEM, CLOSEBRACE, END, ERROR }
+    public enum TokenК
+    {
+        IF,
+        THEN,
+        ELSE,
+        GOTO,
+        OPERATOR,    // >, <, =
+        SEMICOLON,   // ;
+        ID,          // Идентификатор (например, X)
+        NUMBER,      // Число (например, 100)
+        UNKNOWN
+    }
     public class Scan
     {
+        Dictionary<string, Token> state = new Dictionary<string, Token>();
         public string text;
         public string[] words;
-        public string error = "";
+
         public Dictionary<string, int> keyValuePairs = new Dictionary<string, int>()
         {
-            { "struct", 1 },
-            { "int", 2},
-            { "string", 3},
-            { "double", 4},
-            { "float", 5},
-            { "public", 6},
-            { "private", 7},
-            { "protected", 8},
-            { " ", 9},
-            { "{", 10},
-            { "}", 11},
-            { ";", 12}
+            { "IF", 1 },
+            { "THEN", 2 },
+            { "ELSE", 3 },
+            { "GOTO", 4 },
+            { ">", 5 },
+            { "<", 6 },
+            { "=", 7 },
+            { ";", 8 },
+            { " ", 9 } // пробел
         };
+
+        public List<MyToken> myTokens;
+        public List<int> line = new List<int>();
+        public List<int> position = new List<int>();
         public Scan(string text)
         {
             this.text = text;
+            myTokens = new List<MyToken>();
+            line = new List<int>();
+            position = new List<int>();
         }
         public List<string> keywords = new List<string>();
         public List<string> keyword = new List<string>();
         public List<int> codes = new List<int>();
-        public List<string> idetnificator = new List<string>();
+        public List<Token> tokens = new List<Token>();
+        public List<string> errors = new List<string>();
 
-        public void Lexic()
+        public List<string> fortoken = new List<string>();
+        public void Tokenize()
         {
-            var result = Regex.Matches(text, @"\w+|[{};/ \+-?=,()]|\s+|\"".*?\""");
-            int prevcode = 0;
-            foreach (Match match in result)
+            for (int i = 0; i < codes.Count; i++)
             {
-                int code = 0;
-                if (match.Value.Trim().Length == 0 && prevcode != 9 && (prevcode >= 1 && prevcode < 9))
-                {
-                    code = keyValuePairs[match.Value];
-                    codes.Add(code);
-                    keywords.Add("WhiteSpace");
-                    keyword.Add(match.Value);
-
-                }
-                else if (keyValuePairs.ContainsKey(match.Value))
-                {
-                    code = keyValuePairs[match.Value];
-                    if (code != 9)
-                    {
-                        codes.Add(code);
-                        if (code > 0 && code < 9)
-                        {
-                            keywords.Add("keyword");
-                        }
-                        else if (code == 10 || code == 11)
-                        {
-                            keywords.Add("razdelitel");
-                        }
-                        else if (code == 12)
-                        {
-                            keywords.Add("end operator");
-                        }
-                        keyword.Add(match.Value);
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-                else if (letter(match.Value))
-                {
-                    code = 13;
-                    codes.Add(code);
-                    keywords.Add("Id");
-                    keyword.Add(match.Value);
-                }
-                else
-                {
-                    if (match.Value.Trim().Length != 0)
-                    {
-                        code = 0;
-                        codes.Add(code);
-                        keywords.Add("Error");
-                        keyword.Add(match.Value);
-                    }
-                }
-                prevcode = code;
-            }
-        }
-        List<string> errors = new List<string>();
-        public void Syntax()
-        {
-            Token token = Token.START;
-            Token prev_token = Token.START;
-            List<Token> tokens = new List<Token>();
-            int i = 0;
-            int err = 0;
-            int OB = 0;
-            int CB = 0;
-            List<Token> types = new List<Token>();
-            while (i < codes.Count)
-            {
-
                 switch (codes[i])
                 {
                     case 1:
-                        if (err == 0)
-                        {
-                            prev_token = token;
-                        }
-                        token = Token.StructKeyword;
-
-                        break;
-                    case 6:
-                    case 7:
-                    case 8:
-                        if (err == 0)
-                        {
-                            prev_token = token;
-                        }
-
-                        if (token == Token.START)
-                        {
-
-                            token = Token.ModStruct;
-                        }
-                        else
-                        {
-                            token = Token.Mod;
-                            tokens.Add(token);
-                        }
-
-
+                        tokens.Add(Token.STRUCT);
+                        fortoken.Add(keyword[i]);
                         break;
                     case 2:
                     case 3:
                     case 4:
                     case 5:
-                        if (err == 0)
-                        {
-                            prev_token = token;
-                        }
-                        token = Token.Type;
-
-                        tokens.Add(token);
+                        tokens.Add(Token.TYPE);
+                        fortoken.Add(keyword[i]);
                         break;
-                    case 9:
-                        i++;
-                        continue;
                     case 10:
-                        if (err == 0)
-                        {
-                            prev_token = token;
-                        }
-                        OB++;
-                        token = Token.OpenBrace;
-
+                        tokens.Add(Token.OPENBRACE);
                         break;
                     case 11:
-                        if (err == 0)
-                        {
-                            prev_token = token;
-                        }
-                        CB++;
-                        token = Token.CloseBrace;
-
+                        tokens.Add(Token.CLOSEBRACE);
+                        fortoken.Add(keyword[i]);
                         break;
                     case 12:
-                        if (err == 0)
-                        {
-                            prev_token = token;
-                        }
-                        if (token == Token.CloseBrace)
-                        {
-                            token = Token.END;
-                        }
-                        else
-                        {
-                            token = Token.Semicolon;
-                        }
+                        tokens.Add(Token.SEM);
+                        fortoken.Add(keyword[i]);
                         break;
                     case 13:
-                        if (err == 0)
+                        tokens.Add(Token.ID);
+                        fortoken.Add(keyword[i]);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        
+        public void Lexic()
+        {
+            int i = 0;
+            int prevcode = 0;
+            int line = 1;
+            while (i < text.Length)
+            {
+                char c = text[i];
+                if (c == '\n')
+                {
+                    line++;
+                    i++;
+                    continue;
+                }
+                // Пробел
+                if (char.IsWhiteSpace(c))
+                {
+                    if (prevcode != 9 && (prevcode >= 1 && prevcode < 9))
+                    {
+                        codes.Add(keyValuePairs[" "]);
+                        keywords.Add("WhiteSpace");
+                        keyword.Add(" ");
+                    }
+                    i++;
+                    continue;
+                }
+
+                // Разделители { } ;
+                if (IsDelimiter(c.ToString()))
+                {
+                    int code = keyValuePairs[c.ToString()];
+                    codes.Add(code);
+                    if (code > 0 && code < 6)
+                        keywords.Add("keyword");
+                    else if (code == 10 || code == 11)
+                        keywords.Add("razdelitel");
+                    else if (code == 12)
+                        keywords.Add("end operator");
+                    myTokens.Add(new MyToken(  i, line, c.ToString()));
+                    keyword.Add(c.ToString());
+                    prevcode = code;
+                    i++;
+                    continue;
+                }
+
+
+
+                // Идентификатор или ключевое слово
+                if (char.IsLetter(c) || c == '_')
+                {
+                    string cleaned = "";
+                    int start = i;
+                    bool hasRussian = false;
+
+                    while (i < text.Length && !char.IsWhiteSpace(text[i]) && !IsDelimiter(text[i].ToString()))
+                    {
+                        char ch = text[i];
+
+                        if (char.IsLetterOrDigit(ch) || ch == '_')
                         {
-                            prev_token = token;
-                        }
-                        if (token == Token.StructKeyword)
-                        {
-                            token = Token.StructName;
+                            // Проверка на русские символы
+                            if (ch >= 'А' && ch <= 'я' || ch == 'ё' || ch == 'Ё')
+                            {
+                                hasRussian = true;
+                            }
+                            cleaned += ch;
                         }
                         else
                         {
-                            tokens.Add(token);
-
-                            token = Token.IDentificator;
+                            errors.Add(ch.ToString()); // символ с ошибкой — в отдельный список
+                            this.line.Add(line);
+                            this.position.Add(i);
                         }
-                        break;
-                    default:
-                        Console.WriteLine("Лексическая ошибка");
+
                         i++;
-                        token = Token.error;
-                        continue;
-
-                }
-                if (token == Token.END)
-                {
-                    token = Token.START;
-                    prev_token = Token.END;
-                    tokens.Clear();
-                }
-                if (token == Token.Semicolon || token == Token.CloseBrace)
-                {
-                    if (tokens.Count > 3)
-                    {
-                        errors.Add("Слишком большое количество аргументов");
-
                     }
-                    tokens.Clear();
+
+                    if (cleaned.Length > 0)
+                    {
+                        if (hasRussian)
+                        {
+                            // Русское слово — игнорировать или добавить в ошибки
+                            errors.Add(cleaned); // можно закомментировать, если не нужно
+                            this.line.Add(line);
+                            this.position.Add(i);
+                        }
+                        else
+                        {
+                            if (keyValuePairs.ContainsKey(cleaned))
+                            {
+                                int code = keyValuePairs[cleaned];
+                                codes.Add(code);
+                                keywords.Add("keyword");
+                                keyword.Add(cleaned);
+                                myTokens.Add(new MyToken(start, line, cleaned));
+                                prevcode = code;
+                            }
+                            else
+                            {
+                                codes.Add(13);
+                                keywords.Add("Id");
+                                keyword.Add(cleaned);
+                                myTokens.Add(new MyToken(start, line, cleaned));
+                                prevcode = 13;
+                            }
+                        }
+                    }
+
+                    continue;
                 }
 
-                //private struct Mystruct {  private int  x; private string name; }; 
-                if (token == Token.ModStruct && prev_token != Token.START)
+                // Прочие символы — ошибка
+                if (c != '{' && c != '}' && c != ';')
                 {
-                    errors.Add("Врядли возможно");
-                    err = 1;
-                }
-                else if (token == Token.StructKeyword && prev_token != Token.START && prev_token != Token.ModStruct)
-                {
-                    errors.Add("Структура не может быть объявлена здесь");
-                    err = 1;
-                }
-                else if (token == Token.OpenBrace && prev_token != Token.StructName)
-                {
-                    errors.Add("expected {");
-                    err = 1;
-                }
-                else if (token == Token.CloseBrace && prev_token != Token.Semicolon && prev_token != Token.OpenBrace)
-                {
-                    errors.Add("Неверно объявлена скобка");
-                    err = 1;
-                }
-                else if (token == Token.Mod && prev_token != Token.Semicolon && prev_token != Token.OpenBrace)
-                {
-                    errors.Add("Ошибка объявленния модификатора доступа");
-                    err = 1;
-                }
-                else if (token == Token.Type && prev_token != Token.Semicolon && prev_token != Token.OpenBrace && prev_token != Token.Mod)
-                {
-                    errors.Add("Ошибка объявления типа");
-                    err = 1;
-                }
-                else if (token == Token.IDentificator && prev_token != Token.Type)
-                {
-                    errors.Add("Ошибка объявления идентификатора");
-                    err = 1;
-                }
-                else if (token == Token.StructName && prev_token != Token.StructKeyword)
-                {
-                    errors.Add("не объявлено имя структуры");
-                    err = 1;
-                }
-                else
-                {
-                    err = 0;
-                }
-                if (token == Token.Semicolon)
-                {
-                    err = 0;
-                }
-                if (OB > CB && (token == Token.END || i == codes.Count))
-                {
-                    errors.Add("Структура не закрыта");
+                    errors.Add(c.ToString()); // ошибка только в errors
+                    this.line.Add(line);
+                    this.position.Add(i);
                 }
 
-
-                if (i == codes.Count && token != Token.END)
-                {
-                    errors.Add("Структура не закончена");
-                }
                 i++;
             }
         }
 
+
+        private bool IsSymbol(char c)
+        {
+            // Символы, которые могут входить в "грязные" идентификаторы
+            return "@$.#%&*!?\"\\|:[]/+-=<>()".Contains(c);
+        }
+
+        private bool IsDelimiter(string s)
+        {
+            return keyValuePairs.ContainsKey(s) &&
+                   (s.Length == 1 && "{};".Contains(s));
+        }
 
         private bool letter(string word)
         {
             if (char.IsDigit(word[0]))
                 return false;
 
-            if (word.All(c => char.IsLetterOrDigit(c) || c == '_')&& !Regex.IsMatch(word, "[А-Яа-я]"))
+            if (word.All(c => char.IsLetterOrDigit(c) || c == '_') && !Regex.IsMatch(word, "[А-Яа-я]"))
             {
                 return true;
             }

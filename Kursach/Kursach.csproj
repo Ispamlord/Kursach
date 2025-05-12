@@ -6,7 +6,47 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Configurations>Debug;Release;Parser_Struct;Syntax Parser</Configurations>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Compilier\Грамматика.pdf" />
+    <None Remove="Compilier\Классификация_грамматики.pdf" />
+    <None Remove="Compilier\Код.pdf" />
+    <None Remove="Compilier\Литература.pdf" />
+    <None Remove="Compilier\Метод_анализа.pdf" />
+    <None Remove="Compilier\Постановка_задачи.pdf" />
+    <None Remove="Compilier\Тесты.pdf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Compilier\Грамматика.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Compilier\Классификация_грамматики.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Compilier\Код.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Compilier\Литература.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Compilier\Метод_анализа.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Compilier\Постановка_задачи.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Compilier\Тесты.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PDFium.x64" Version="4648.0.0" />
+    <PackageReference Include="PdfiumViewer" Version="2.13.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

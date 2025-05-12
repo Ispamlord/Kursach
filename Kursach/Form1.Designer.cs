@@ -45,9 +45,21 @@
             Paste = new ToolStripMenuItem();
             Remove = new ToolStripMenuItem();
             Select_all = new ToolStripMenuItem();
-            текстToolStripMenuItem = new ToolStripMenuItem();
             Run = new ToolStripMenuItem();
+            puskPasportToolStripMenuItem = new ToolStripMenuItem();
+            puskToolStripMenuItem = new ToolStripMenuItem();
+            текстToolStripMenuItem = new ToolStripMenuItem();
+            тестовыеПримерыToolStripMenuItem = new ToolStripMenuItem();
+            грамматикаToolStripMenuItem = new ToolStripMenuItem();
+            классификацияГрамматикаToolStripMenuItem = new ToolStripMenuItem();
+            методАнализаToolStripMenuItem = new ToolStripMenuItem();
+            диагностикаИНейтрализацияОшибокToolStripMenuItem = new ToolStripMenuItem();
+            списокЛитературыToolStripMenuItem = new ToolStripMenuItem();
+            постановкаЗадачиToolStripMenuItem = new ToolStripMenuItem();
+            исходныйКодПрограммыToolStripMenuItem = new ToolStripMenuItem();
             справкаToolStripMenuItem = new ToolStripMenuItem();
+            вызовСправкиToolStripMenuItem = new ToolStripMenuItem();
+            оПрограммеToolStripMenuItem = new ToolStripMenuItem();
             разноеToolStripMenuItem = new ToolStripMenuItem();
             UpSize = new ToolStripMenuItem();
             DownSize = new ToolStripMenuItem();
@@ -62,6 +74,7 @@
             richTextBox1 = new RichTextBox();
             dataGridView1 = new DataGridView();
             pictureBox1 = new PictureBox();
+            puskHTTPToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)Create_).BeginInit();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Open_).BeginInit();
@@ -90,7 +103,7 @@
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { файлToolStripMenuItem, правкаToolStripMenuItem, текстToolStripMenuItem, Run, справкаToolStripMenuItem, разноеToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { файлToolStripMenuItem, правкаToolStripMenuItem, Run, текстToolStripMenuItem, справкаToolStripMenuItem, разноеToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(799, 28);
@@ -183,30 +196,120 @@
             Remove.Name = "Remove";
             Remove.Size = new Size(186, 26);
             Remove.Text = "Удалить";
+            Remove.Click += Remove_Click;
             // 
             // Select_all
             // 
             Select_all.Name = "Select_all";
             Select_all.Size = new Size(186, 26);
             Select_all.Text = "Выделить все";
+            Select_all.Click += Select_all_Click;
+            // 
+            // Run
+            // 
+            Run.DropDownItems.AddRange(new ToolStripItem[] { puskPasportToolStripMenuItem, puskToolStripMenuItem, puskHTTPToolStripMenuItem });
+            Run.Name = "Run";
+            Run.Size = new Size(55, 24);
+            Run.Text = "Пуск";
+            Run.Click += Run__Click;
+            // 
+            // puskPasportToolStripMenuItem
+            // 
+            puskPasportToolStripMenuItem.Name = "puskPasportToolStripMenuItem";
+            puskPasportToolStripMenuItem.Size = new Size(224, 26);
+            puskPasportToolStripMenuItem.Text = "Pusk Pasport";
+            puskPasportToolStripMenuItem.Click += puskPasportToolStripMenuItem_Click;
+            // 
+            // puskToolStripMenuItem
+            // 
+            puskToolStripMenuItem.Name = "puskToolStripMenuItem";
+            puskToolStripMenuItem.Size = new Size(224, 26);
+            puskToolStripMenuItem.Text = "Pusk";
+            puskToolStripMenuItem.Click += puskToolStripMenuItem_Click;
             // 
             // текстToolStripMenuItem
             // 
+            текстToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { тестовыеПримерыToolStripMenuItem, грамматикаToolStripMenuItem, классификацияГрамматикаToolStripMenuItem, методАнализаToolStripMenuItem, диагностикаИНейтрализацияОшибокToolStripMenuItem, списокЛитературыToolStripMenuItem, постановкаЗадачиToolStripMenuItem, исходныйКодПрограммыToolStripMenuItem });
             текстToolStripMenuItem.Name = "текстToolStripMenuItem";
             текстToolStripMenuItem.Size = new Size(59, 24);
             текстToolStripMenuItem.Text = "Текст";
             // 
-            // Run
+            // тестовыеПримерыToolStripMenuItem
             // 
-            Run.Name = "Run";
-            Run.Size = new Size(55, 24);
-            Run.Text = "Пуск";
+            тестовыеПримерыToolStripMenuItem.Name = "тестовыеПримерыToolStripMenuItem";
+            тестовыеПримерыToolStripMenuItem.Size = new Size(363, 26);
+            тестовыеПримерыToolStripMenuItem.Text = "Постановка задачи";
+            тестовыеПримерыToolStripMenuItem.Click += тестовыеПримерыToolStripMenuItem_Click;
+            // 
+            // грамматикаToolStripMenuItem
+            // 
+            грамматикаToolStripMenuItem.Name = "грамматикаToolStripMenuItem";
+            грамматикаToolStripMenuItem.Size = new Size(363, 26);
+            грамматикаToolStripMenuItem.Text = "Грамматика";
+            грамматикаToolStripMenuItem.Click += грамматикаToolStripMenuItem_Click;
+            // 
+            // классификацияГрамматикаToolStripMenuItem
+            // 
+            классификацияГрамматикаToolStripMenuItem.Name = "классификацияГрамматикаToolStripMenuItem";
+            классификацияГрамматикаToolStripMenuItem.Size = new Size(363, 26);
+            классификацияГрамматикаToolStripMenuItem.Text = "Классификация грамматика";
+            классификацияГрамматикаToolStripMenuItem.Click += классификацияГрамматикаToolStripMenuItem_Click;
+            // 
+            // методАнализаToolStripMenuItem
+            // 
+            методАнализаToolStripMenuItem.Name = "методАнализаToolStripMenuItem";
+            методАнализаToolStripMenuItem.Size = new Size(363, 26);
+            методАнализаToolStripMenuItem.Text = "Метод анализа";
+            методАнализаToolStripMenuItem.Click += методАнализаToolStripMenuItem_Click;
+            // 
+            // диагностикаИНейтрализацияОшибокToolStripMenuItem
+            // 
+            диагностикаИНейтрализацияОшибокToolStripMenuItem.Name = "диагностикаИНейтрализацияОшибокToolStripMenuItem";
+            диагностикаИНейтрализацияОшибокToolStripMenuItem.Size = new Size(363, 26);
+            диагностикаИНейтрализацияОшибокToolStripMenuItem.Text = "Диагностика и нейтрализация ошибок";
+            диагностикаИНейтрализацияОшибокToolStripMenuItem.Click += диагностикаИНейтрализацияОшибокToolStripMenuItem_Click;
+            // 
+            // списокЛитературыToolStripMenuItem
+            // 
+            списокЛитературыToolStripMenuItem.Name = "списокЛитературыToolStripMenuItem";
+            списокЛитературыToolStripMenuItem.Size = new Size(363, 26);
+            списокЛитературыToolStripMenuItem.Text = "Тестовый пример";
+            списокЛитературыToolStripMenuItem.Click += списокЛитературыToolStripMenuItem_Click;
+            // 
+            // постановкаЗадачиToolStripMenuItem
+            // 
+            постановкаЗадачиToolStripMenuItem.Name = "постановкаЗадачиToolStripMenuItem";
+            постановкаЗадачиToolStripMenuItem.Size = new Size(363, 26);
+            постановкаЗадачиToolStripMenuItem.Text = "Список литературы";
+            постановкаЗадачиToolStripMenuItem.Click += постановкаЗадачиToolStripMenuItem_Click;
+            // 
+            // исходныйКодПрограммыToolStripMenuItem
+            // 
+            исходныйКодПрограммыToolStripMenuItem.Name = "исходныйКодПрограммыToolStripMenuItem";
+            исходныйКодПрограммыToolStripMenuItem.Size = new Size(363, 26);
+            исходныйКодПрограммыToolStripMenuItem.Text = "Исходный код программы";
+            исходныйКодПрограммыToolStripMenuItem.Click += исходныйКодПрограммыToolStripMenuItem_Click;
             // 
             // справкаToolStripMenuItem
             // 
+            справкаToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { вызовСправкиToolStripMenuItem, оПрограммеToolStripMenuItem });
             справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
             справкаToolStripMenuItem.Size = new Size(81, 24);
             справкаToolStripMenuItem.Text = "Справка";
+            // 
+            // вызовСправкиToolStripMenuItem
+            // 
+            вызовСправкиToolStripMenuItem.Name = "вызовСправкиToolStripMenuItem";
+            вызовСправкиToolStripMenuItem.Size = new Size(197, 26);
+            вызовСправкиToolStripMenuItem.Text = "Вызов справки";
+            вызовСправкиToolStripMenuItem.Click += оПрограммеToolStripMenuItem_Click;
+            // 
+            // оПрограммеToolStripMenuItem
+            // 
+            оПрограммеToolStripMenuItem.Name = "оПрограммеToolStripMenuItem";
+            оПрограммеToolStripMenuItem.Size = new Size(197, 26);
+            оПрограммеToolStripMenuItem.Text = "О программе";
+            оПрограммеToolStripMenuItem.Click += вызовСправкиToolStripMenuItem_Click;
             // 
             // разноеToolStripMenuItem
             // 
@@ -343,6 +446,13 @@
             pictureBox1.TabIndex = 26;
             pictureBox1.TabStop = false;
             // 
+            // puskHTTPToolStripMenuItem
+            // 
+            puskHTTPToolStripMenuItem.Name = "puskHTTPToolStripMenuItem";
+            puskHTTPToolStripMenuItem.Size = new Size(224, 26);
+            puskHTTPToolStripMenuItem.Text = "Pusk_HTTP";
+            puskHTTPToolStripMenuItem.Click += puskHTTPToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -416,5 +526,18 @@
         private ToolStripMenuItem UpSize;
         private ToolStripMenuItem DownSize;
         private PictureBox pictureBox1;
+        private ToolStripMenuItem вызовСправкиToolStripMenuItem;
+        private ToolStripMenuItem оПрограммеToolStripMenuItem;
+        private ToolStripMenuItem тестовыеПримерыToolStripMenuItem;
+        private ToolStripMenuItem грамматикаToolStripMenuItem;
+        private ToolStripMenuItem классификацияГрамматикаToolStripMenuItem;
+        private ToolStripMenuItem методАнализаToolStripMenuItem;
+        private ToolStripMenuItem диагностикаИНейтрализацияОшибокToolStripMenuItem;
+        private ToolStripMenuItem списокЛитературыToolStripMenuItem;
+        private ToolStripMenuItem постановкаЗадачиToolStripMenuItem;
+        private ToolStripMenuItem исходныйКодПрограммыToolStripMenuItem;
+        private ToolStripMenuItem puskPasportToolStripMenuItem;
+        private ToolStripMenuItem puskToolStripMenuItem;
+        private ToolStripMenuItem puskHTTPToolStripMenuItem;
     }
 }
