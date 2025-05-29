@@ -10,65 +10,67 @@ struct name {
 
 ## Примеры допустимых строк
 
-1)	“func calc(a, b, c int) { return a + b * (c - 10) };”
-![image](https://github.com/user-attachments/assets/c88bac5d-5652-4d6c-a0b9-c899d4e48c8e)
+1)	“struct name {  string name2;  int name3;};”
+![image](https://github.com/user-attachments/assets/c6b84fd0-a8fa-47c3-b80c-e23bf96f2d92)
 
-2)	“func super(fn, wet int) { return 15 - qq / fn * 35 };”   
-![image](https://github.com/user-attachments/assets/1c2ff654-8f10-4699-912e-c778cc822976)
 
-3)	“func super(fn wet int) { retrn 15 - qq / fn * 35};”  
-![image](https://github.com/user-attachments/assets/a4e050a6-2a53-48c1-a411-db8b00017a3c)
+2)	“struct name  string name2;  int name3;};”   
+![image](https://github.com/user-attachments/assets/2204dd8d-a39a-4c67-8516-6709e6f444f8)
 
-4)	“fnc supe^r(fn, wet, it) {return fn * (wet - it};” 
-![image](https://github.com/user-attachments/assets/66a53898-3150-4381-a6bc-ded783eb05cc)
 
-5)	“func &&& super(fn, gfg wet int) {retrn fn * (wet - it)}” 
-![image](https://github.com/user-attachments/assets/902d530f-cd19-4d5e-bb5c-9b5981e8f5f5)
+3)	“struct name  string name2;  int na!me3};”  
+![image](https://github.com/user-attachments/assets/7bebcb50-ae09-4a58-8582-20501acaa848)
+
+
+4)	“strut name  string name2;  int na!me3}” 
+![image](https://github.com/user-attachments/assets/c3a121e6-bad1-4d21-a294-cf25e851c3c7)
+
+
 
 ## Разработанная грамматика
 
 ```
-Определим грамматику создания функции языка Go G[<F>] в нотации Хомского с продукциями P:
-
-G[<F>]:
-1) <F> -> 'func ' <I>
-2) <I> -> id <Q>
-3) <Q> -> '(' <M>
-4) <M> -> <P> <L>
-5) <P> -> id ' ' type | id ',' <P> 
-6) <L> -> ')' <K>
-7) <K> -> '{' <R>
-8) <R> -> 'return '<RV>
-9) <RV> -> <E><EB>
-10) <EB> -> '}'<END>
-11) <E> -> <T> <A>
-12) <A> -> '+' <T> <A> | '-' <T> <A> | ε
-13) <T> -> <O> <B>
-14) <B> -> '*' <O> <B> | '/' <O> <B> | ε
-15) <O> -> id | num | '('<E>')'
-16) <END> -> ';'
-17) <IDENTIFIER> -> letter <IDENTIFIER_REM>
-18) <IDENTIFIER_REM> -> letter | digit | ε
-19) <NUMBER> -> digit <NUMBER_TAIL>
-20) <NUMBER_TAIL> -> digit <NUMBER_TAIL> | ε
-‒ num = <NUMBER>
-‒ id = <IDENTIFIER>
-‒ letter -> 'a' | 'b' | ... | 'z' | 'A' | 'B' | ... | 'Z'
-‒ digit -> '0' | '1' | ... | '9'
-‒ type -> ' int' | ' uint' | ' float32' | ' float64'
-Следуя введенному формальному определению грамматики, представим G[<F>] ее составляющими:
-‒ Z = <F>
-‒ VT = {a, b, ..., z, A, B, ..., Z, 0, 1, ...,9, +, -, /, *, {, }, (, ), ;}
-‒ VN = {<F>, <I>, <Q>, <M>, <P>, <L>, <K>, <R>, <RV>, <EB>, <EB>, <E>, <A>, <T>, <B>, <O>, <END>, <IDENTIFIER>, <IDENTIFIER_REM>, <NUMBER>, <NUMBER_TAIL>}.
+Определим грамматику целочисленных констант языка C#
+G[<START>] в нотации Хомского с продукциями P:
+1) <START> -> 'struct' <NAMESTRUCT>
+2) < NAMESTRUCT > -> letter< NAMESTRUCTREC >
+3) < NAMESTRUCTREC >-> letter
+4) < NAMESTRUCTREC >->digit
+5) < NAMESTRUCTREC >-> '_'
+6) < NAMESTRUCTREC >-> '{' <FIELD>
+7) <FIELD>-> '}'<END>
+8) <FIELD>-> 'int'<FIELDNAME>
+9) <FIELD>-> 'string'<FIELDNAME>
+10) <FIELD>-> 'float'<FIELDNAME>
+11) <FIELD>-> 'double'<FIELDNAME>
+12) < FIELDNAME >-> letter< NAME >
+13) < NAME >->letter< NAME >
+14) < NAME >-> digit < NAME >
+15) < NAME >-> '_'< NAME >
+16) < NAME >-> ';'< FIELD >
+17) <END> -> ';'
+‒ digit -> 1|...|0
+‒ letter -> a|...|z|A|...|Z|
+Следуя введенному формальному определению грамматики,
+представим G[<START>] ее составляющими:
+‒ Z = <START>
+‒ VT = {a|...|z|A|...|Z|'_'|1|...|9, '{', '}', ';', 'int', 'string', 'float','double', 'struct',
+digit, letter}
+‒ VN = {<START>, < NAMESTRUCT >, < NAMESTRUCTREC >, <
+FIELD >, < FIELDNAME >, < END >}.
 ```
 ## Классификация грамматики
 
 ```
-Согласно классификации Хомского, полученная порождающая грамматика G[<F>] соответствует типу контекстно-свободных, так как правая часть каждой редукции начинается либо с терминального символа, либо с нетерминального, принадлежащего объединённому словарю.
-A →a,A∈V_N,a∈V^*.
-Грамматика G[<F>] не является автоматной, так как не все её редукции начинаются с терминального символа. По этой же причине данная грамматика не является S - грамматикой.
+Согласно классификации Хомского, грамматика G[‹START›]
+является автоматной.
+Правила (1)-(13) относятся к классу праворекурсивных продукций (A
+→ aB | a | ε):
+Отметим, что правила должны быть либо только леворекурсивными,
+либо только праворекурсивными. Комбинация тех и других не допускается.
 ```
-![image](https://github.com/user-attachments/assets/9b90ec42-779f-4e45-b9e0-e935acf77b66)
+![image](https://github.com/user-attachments/assets/68fabd5a-9a04-4d03-8534-26d7967437a3)
+
 
 
 ## Справочная система
@@ -128,10 +130,33 @@ A →a,A∈V_N,a∈V^*.
 Создание функции языка Go
 
 ## Примеры допустимых строк
-func calc(x, y, z int) int {
-    return x + (y * z)
+struct name {
+  string name2;
+  int name3;
 };
-![image](https://github.com/user-attachments/assets/87f09420-2a9f-4107-bd10-1f7ceb092b87)
+![image](https://github.com/user-attachments/assets/5a3378d4-3ab4-4a13-ac00-25d333eb8cad)
+# 5 Лабораторная работа
 
-## Диаграмма состояний сканера 
-![Диаграмма](https://github.com/user-attachments/assets/e1141303-5334-4763-be74-c511e089a62c)
+# Реализация алгоритма поиска подстрок с помощью регулярных выражений
+
+## Вариант задания
+
+- Блок I. 22. Построить РВ, описывающее серию и номер российского паспорта.
+- Блок II. 23. Построить РВ для поиска аббревиатур.
+- Блок III. 9. Построить РВ, описывающее URL-ссылку на веб-страницу на латинице (с различными протоколами HTTP, HTTPS, FTP).
+
+
+## Решение
+1. ```\b\d{4}\s\d{6}\b```
+2. ```\b[А-ЯA-Z]{2,}\b```
+3. ```\b(?:http|https|ftp)://[a-zA-Z0-9\-._~:/?#@!$&'()*+,;=%]+\b```
+
+
+# Тестовые примеры
+## Блок I. 22. Построить РВ, описывающее серию и номер российского паспорта.
+![image](https://github.com/user-attachments/assets/f62e8c61-405e-46fe-ada2-3673b86eec0b)
+## Блок II. 23. Построить РВ для поиска аббревиатур.
+![image](https://github.com/user-attachments/assets/3d5b6240-519f-42bd-a18f-4269d2bf4bcd)
+## Блок III. 9. Построить РВ, описывающее URL-ссылку на веб-страницу на латинице (с различными протоколами HTTP, HTTPS, FTP).
+![image](https://github.com/user-attachments/assets/e4942e20-33c0-47de-ba50-9e3fff6008c6)
+
