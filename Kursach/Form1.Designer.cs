@@ -48,6 +48,9 @@
             Run = new ToolStripMenuItem();
             puskPasportToolStripMenuItem = new ToolStripMenuItem();
             puskToolStripMenuItem = new ToolStripMenuItem();
+            puskHTTPToolStripMenuItem = new ToolStripMenuItem();
+            puskTetradToolStripMenuItem = new ToolStripMenuItem();
+            puskrekursToolStripMenuItem = new ToolStripMenuItem();
             текстToolStripMenuItem = new ToolStripMenuItem();
             тестовыеПримерыToolStripMenuItem = new ToolStripMenuItem();
             грамматикаToolStripMenuItem = new ToolStripMenuItem();
@@ -74,7 +77,6 @@
             richTextBox1 = new RichTextBox();
             dataGridView1 = new DataGridView();
             pictureBox1 = new PictureBox();
-            puskHTTPToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)Create_).BeginInit();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Open_).BeginInit();
@@ -207,7 +209,7 @@
             // 
             // Run
             // 
-            Run.DropDownItems.AddRange(new ToolStripItem[] { puskPasportToolStripMenuItem, puskToolStripMenuItem, puskHTTPToolStripMenuItem });
+            Run.DropDownItems.AddRange(new ToolStripItem[] { puskPasportToolStripMenuItem, puskToolStripMenuItem, puskHTTPToolStripMenuItem, puskTetradToolStripMenuItem, puskrekursToolStripMenuItem });
             Run.Name = "Run";
             Run.Size = new Size(55, 24);
             Run.Text = "Пуск";
@@ -226,6 +228,27 @@
             puskToolStripMenuItem.Size = new Size(224, 26);
             puskToolStripMenuItem.Text = "Pusk";
             puskToolStripMenuItem.Click += puskToolStripMenuItem_Click;
+            // 
+            // puskHTTPToolStripMenuItem
+            // 
+            puskHTTPToolStripMenuItem.Name = "puskHTTPToolStripMenuItem";
+            puskHTTPToolStripMenuItem.Size = new Size(224, 26);
+            puskHTTPToolStripMenuItem.Text = "Pusk_HTTP";
+            puskHTTPToolStripMenuItem.Click += puskHTTPToolStripMenuItem_Click;
+            // 
+            // puskTetradToolStripMenuItem
+            // 
+            puskTetradToolStripMenuItem.Name = "puskTetradToolStripMenuItem";
+            puskTetradToolStripMenuItem.Size = new Size(224, 26);
+            puskTetradToolStripMenuItem.Text = "Pusk_Tetrad";
+            puskTetradToolStripMenuItem.Click += puskTetradToolStripMenuItem_Click;
+            // 
+            // puskrekursToolStripMenuItem
+            // 
+            puskrekursToolStripMenuItem.Name = "puskrekursToolStripMenuItem";
+            puskrekursToolStripMenuItem.Size = new Size(224, 26);
+            puskrekursToolStripMenuItem.Text = "Pusk_rekurs";
+            puskrekursToolStripMenuItem.Click += puskrekursToolStripMenuItem_Click;
             // 
             // текстToolStripMenuItem
             // 
@@ -446,13 +469,6 @@
             pictureBox1.TabIndex = 26;
             pictureBox1.TabStop = false;
             // 
-            // puskHTTPToolStripMenuItem
-            // 
-            puskHTTPToolStripMenuItem.Name = "puskHTTPToolStripMenuItem";
-            puskHTTPToolStripMenuItem.Size = new Size(224, 26);
-            puskHTTPToolStripMenuItem.Text = "Pusk_HTTP";
-            puskHTTPToolStripMenuItem.Click += puskHTTPToolStripMenuItem_Click;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -539,5 +555,7 @@
         private ToolStripMenuItem puskPasportToolStripMenuItem;
         private ToolStripMenuItem puskToolStripMenuItem;
         private ToolStripMenuItem puskHTTPToolStripMenuItem;
+        private ToolStripMenuItem puskTetradToolStripMenuItem;
+        private ToolStripMenuItem puskrekursToolStripMenuItem;
     }
 }

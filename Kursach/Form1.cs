@@ -437,8 +437,8 @@ namespace Kursach
 
         private void puskHTTPToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
-                dataGridView1.Rows.Clear();
+
+            dataGridView1.Rows.Clear();
             string pattern = @"\b(?:http|https|ftp)://[a-zA-Z0-9\-._~:/?#@!$&'()*+,;=%]+\b";
             Regex regex = new Regex(pattern);
 
@@ -449,6 +449,51 @@ namespace Kursach
                 dataGridView1.Rows.Add(match.Index, "Найдено:", match.Value);
                 Console.WriteLine($"Найдено: {match.Value}, Позиция начала: {match.Index}");
             }
+        }
+
+        private void puskTetradToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.Clear();
+
+            try
+            {
+                Lexer lexer = new Lexer(richTextBox1.Text);
+                Parser parser = new Parser(lexer);
+                parser.Parse();
+
+                foreach (var tetrad in parser.Tetrads)
+                {
+                    if (tetrad.IsError)
+                    {
+                        dataGridView1.Rows.Add("Ошибка", tetrad.Arg1, "", "");
+                    }
+                    else
+                    {
+                        dataGridView1.Rows.Add(tetrad.Op, tetrad.Arg1, tetrad.Arg2, tetrad.Result);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                dataGridView1.Rows.Add("Ошибка", ex.Message, "", "");
+            }
+        }
+
+        private void puskrekursToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.Clear();
+
+            Lexer2 lexer = new Lexer2(richTextBox1.Text);
+            Parser2 parser = new Parser2(lexer);
+
+            var results = parser.ParseExpression(); // или ParseTerm(), ParseFactor() и т.д.
+
+            int i = 1;
+            foreach (var result in results)
+            {
+                dataGridView1.Rows.Add(i++, "", result);
+            }
+
         }
     }
 }
