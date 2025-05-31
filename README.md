@@ -183,7 +183,7 @@ sudo apt install -y clang llvm opt graphviz
 – `opt` для применения оптимизаций к IR,
 – `graphviz` для конвертации DOT в изображения.
 
-![Вывод apt install](./screen/image_copy.png)
+![image](https://github.com/user-attachments/assets/8a462b44-a240-4295-9ca9-39202442c2d0)
 
 1.3 Проверка версий
 
@@ -194,9 +194,6 @@ dot -V
 ```
 
 Убедился, что версии совместимы и без ошибок при запуске.
-
-![Проверка версий](./screen/image_copy_2.png)
-
 
 ## 2. Исходный пример
 
@@ -227,10 +224,6 @@ int main(void) {
 * `check` содержит две ветви (`<` и `>=`).
 * В `main` фиксированное `value` позволяет предвычисления.
 
-![Код main.c](./screen/image_copy_3.png)
-
-
-
 ## 3. Извлечение AST
 
 Цель: вывести синтаксическое дерево и определить ключевые узлы.
@@ -243,6 +236,9 @@ clang -Xclang -ast-dump -fsyntax-only main.c
 
 * `-Xclang -ast-dump` – дамп AST.
 * `-fsyntax-only` – только проверка, без сборки.
+
+![image](https://github.com/user-attachments/assets/dfcbb3cb-4c40-408f-b957-7729ddeda466)
+
 
 Обращаем внимание на:
 
@@ -267,15 +263,13 @@ clang -S -emit-llvm main.c -o main_unopt.ll
 
 * `-S` – текстовый файл `.ll`.
 * `-emit-llvm` – LLVM IR.
-
 В файле:
 
 * `entry` блоки с `alloca` для `value` и `result`.
 * Инструкции `store` и `load`.
 * Функция `@check` разбита на `if.then`, `if.else`, `if.end`.
 
-![main\_unopt.ll начало](./screen/image_copy_5.png)
-
+![image](https://github.com/user-attachments/assets/dc65d716-2739-4c3e-a813-16e03a799634)
 
 
 ## 5. Проведение оптимизаций
@@ -290,7 +284,8 @@ clang -O0 -S -emit-llvm main.c -o main_O0.ll
 * Сохраняются все `alloca`, `load`, `store`.
 * `@check` как отдельная функция.
 
-![main\_O0.ll начало](./screen/image_copy_6.png)
+![image](https://github.com/user-attachments/assets/ff39eab5-9e5a-4f59-8789-e9cd0cc6451c)
+
 
 ### 5.2 Уровень O2
 
@@ -311,7 +306,8 @@ clang -O2 -S -emit-llvm main.c -o main_O2.ll
 2. `check` исчезает, её тело перенесено.
 3. `printf` получает предвычисленное значение.
 
-![main\_O2.ll фрагмент](./screen/image_copy_7.png)
+![image](https://github.com/user-attachments/assets/5d1d7896-323d-4431-b7c9-30c57771e708)
+
 
 ### 5.3 Сравнение O0 и O2
 
@@ -323,7 +319,8 @@ diff -u main_O0.ll main_O2.ll | head -n 25
 * Появился SSA‑код вместо `load`/`store`.
 * Вызов `check` заменён арифметическими инструкциями.
 
-![diff main\_O0.ll main\_O2.ll](./screen/image_copy_8.png)
+![image](https://github.com/user-attachments/assets/2d588f9a-e382-419f-9b09-1f23eaaf0793)
+
 
 
 
@@ -334,12 +331,13 @@ diff -u main_O0.ll main_O2.ll | head -n 25
 1. Генерация DOT:
 
    ```bash
-   opt -dot-cfg -disable-output main_O2.ll
+   opt-18 -passes=dot-cfg -disable-output main_O2.ll
    ```
 
    Создаётся скрытый файл `.main.dot`.
 
-   ![Список файлов с .main.dot](./screen/image_copy_9.png)
+![image](https://github.com/user-attachments/assets/dde9caa4-8b74-41d7-af5d-87f5c1c536de)
+
 
 2. Конвертация в PNG и просмотр:
 
@@ -351,7 +349,9 @@ diff -u main_O0.ll main_O2.ll | head -n 25
    * Если условие статично известно, CFG сводится к одному блоку.
    * Иначе: два блока (true/false).
 
-   ![cfg\_main.png](./screen/image_copy_10.png)
+![image](https://github.com/user-attachments/assets/ae62062e-b65d-4aaf-8342-53a6e34ca7a3)
+
+![image](https://github.com/user-attachments/assets/dbbc3741-061f-4067-9706-39459f907341)
 
 
 
