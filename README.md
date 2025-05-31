@@ -549,4 +549,5 @@ sin(1 +)               // Ошибка: выражение неполное
 
 ```
 
+![image](https://github.com/user-attachments/assets/c2a8a942-95cb-4dc4-957c-068a3148b13c)
 
