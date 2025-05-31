@@ -364,31 +364,3 @@ diff -u main_O0.ll main_O2.ll | head -n 25
 
 
 
-## 8. Дополнительное задание: исследование оптимизаций (вариант 5)
-
-### 8.1 Отдельное constprop
-
-```bash
-clang -S -emit-llvm main.c -o temp.ll
-opt -S --passes="correlated-propagation" temp.ll -o main_constprop.ll
-```
-
-В `main_constprop.ll`:
-
-* `LIMIT` заменён на `100`.
-* Сохраняются `alloca`, `lo\ad`.
-
-![main\_constprop.ll фрагмент](./screen/image_copy_11.png)
-
-### 8.2 Сравнение с O2
-
-```bash
-diff -u main_constprop.ll main_O2.ll | sed -n '1,20p'
-```
-
-* `constprop` лишь подставляет константы.
-* `-O2` добавляет `mem2reg`, `inline`, `simplifycfg`.
-
-![diff constprop vs O2](./screen/image_copy_12.png)
-
-Вывод: `constprop` заменяет литералы, но для полного удаления памяти и ветвлений нужен комплекс оптимизаций `-O2`.
